@@ -1,6 +1,7 @@
 export type User = {
-    firstName: string,
-    lastName: string,
+    id: number,
+    firstname: string,
+    lastname: string,
     email: string,
     roles: JSON,
     createdAt: string
