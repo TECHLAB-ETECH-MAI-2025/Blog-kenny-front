@@ -109,7 +109,7 @@ export const CommentTable = () => {
                         ))}
                         {comments.length === 0 && (
                             <TableRow>
-                                <TableCell colSpan={5} className="text-center">
+                                <TableCell colSpan={6} className="text-center">
                                     Aucun commentaire trouvé
                                 </TableCell>
                             </TableRow>
