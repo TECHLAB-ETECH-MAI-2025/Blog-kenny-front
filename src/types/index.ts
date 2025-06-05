@@ -33,11 +33,7 @@ export type Article = {
     comments: BlogComment[]
 };
 
-export type Like = {
-    id: number,
-    articleId: number,
-    authorId: number
-}
+
 
 //// global
 

@@ -1,9 +1,9 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Category } from "@/src/types/Category"
+import { BlogComment } from "@/src/types/Comment"
 import { PaginationMeta } from "@/src/types"
-import { getCategories, deleteCategory } from "@/src/services/CategoryService"
+import { getComments, deleteComment } from "@/src/services/CommentService"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 import {
@@ -18,8 +18,8 @@ import { Pagination } from "@/components/admin/pagination"
 import Link from "next/link"
 import { Pencil, Trash } from "lucide-react"
 
-export const CategoryTable = () => {
-    const [categories, setCategories] = useState<Category[]>([])
+export const CommentTable = () => {
+    const [comments, setComments] = useState<BlogComment[]>([])
     const [meta, setMeta] = useState<PaginationMeta>({
         total: 0,
         page: 1,
@@ -27,14 +27,14 @@ export const CategoryTable = () => {
         pages: 1
     })
 
-    const loadCategories = async (page: number = 1) => {
+    const loadComments = async (page: number = 1) => {
         try {
-            const response = await getCategories(page);
-            setCategories(response.categories)
+            const response = await getComments(page);
+            setComments(response.comments)
             setMeta(response.meta)
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : 'Veuillez vérifier votre connexion et réessayer'
-            toast.error('Échec du chargement des catégories', {
+            toast.error('Échec du chargement des commentaires', {
                 description: errorMessage,
                 duration: 4000,
             })
@@ -42,23 +42,23 @@ export const CategoryTable = () => {
     }
 
     useEffect(() => {
-        loadCategories()
+        loadComments()
     }, [])
 
     const handlePageChange = (page: number) => {
-        loadCategories(page)
+        loadComments(page)
     }
 
     const handleDelete = async (id: number) => {
         try {
             toast.loading('Suppression en cours...', { id: `delete-${id}` })
-            await deleteCategory(id)
-            toast.success('Catégorie supprimée', {
+            await deleteComment(id)
+            toast.success('Commentaire supprimé', {
                 id: `delete-${id}`,
-                description: 'La catégorie a été supprimée avec succès',
+                description: 'Le commentaire a été supprimé avec succès',
                 duration: 3000,
             })
-            loadCategories()
+            loadComments()
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : 'Une erreur est survenue lors de la suppression'
             toast.error('Échec de la suppression', {
@@ -75,22 +75,24 @@ export const CategoryTable = () => {
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead>ID</TableHead>
-                            <TableHead>Nom</TableHead>
-                            <TableHead>Description</TableHead>
+                            <TableHead>Id</TableHead>
+                            <TableHead>Contenu</TableHead>
+                            <TableHead>Article titre</TableHead>
+                            <TableHead>Auteur</TableHead>
                             <TableHead>Date de création</TableHead>
                             <TableHead className="text-right">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {categories.map((category) => (
-                            <TableRow key={category.id}>
-                                <TableCell className="font-medium">{category.id}</TableCell>
-                                <TableCell className="font-medium">{category.name}</TableCell>
-                                <TableCell>{category.description}</TableCell>
-                                <TableCell>{new Date(category.createdAt).toLocaleDateString()}</TableCell>
+                        {comments.map((comment) => (
+                            <TableRow key={comment.id}>
+                                <TableCell className="font-medium">{comment.id}</TableCell>
+                                <TableCell className="font-medium">{comment.content}</TableCell>
+                                <TableCell>{comment.article.title}</TableCell>
+                                <TableCell>{`${comment.author.firstname} ${comment.author.lastname}`}</TableCell>
+                                <TableCell>{new Date(comment.createdAt).toLocaleDateString()}</TableCell>
                                 <TableCell className="text-right space-x-2">
-                                    <Link href={`/admin/category/edit/${category.id}`}>
+                                    <Link href={`/admin/comment/edit/${comment.id}`}>
                                         <Button variant="outline" size="icon">
                                             <Pencil className="h-4 w-4" />
                                         </Button>
@@ -98,17 +100,17 @@ export const CategoryTable = () => {
                                     <Button
                                         variant="destructive"
                                         size="icon"
-                                        onClick={() => handleDelete(category.id)}
+                                        onClick={() => handleDelete(comment.id)}
                                     >
                                         <Trash className="h-4 w-4" />
                                     </Button>
                                 </TableCell>
                             </TableRow>
                         ))}
-                        {categories.length === 0 && (
+                        {comments.length === 0 && (
                             <TableRow>
-                                <TableCell colSpan={4} className="text-center">
-                                    Aucune catégorie trouvée
+                                <TableCell colSpan={6} className="text-center">
+                                    Aucun commentaire trouvé
                                 </TableCell>
                             </TableRow>
                         )}
