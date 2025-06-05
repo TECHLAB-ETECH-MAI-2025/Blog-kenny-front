@@ -1,6 +1,6 @@
 "use client"
 
-import { Home, LayoutDashboard, ListOrdered, Settings, User } from "lucide-react"
+import { Home, ListOrdered, MessageSquareText, Newspaper, User } from "lucide-react"
 import {
     Sidebar,
     SidebarContent,
@@ -12,12 +12,13 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { usePathname } from "next/navigation"
 
 const menuItems = [
     {
-        title: "Tableau de bord",
-        icon: LayoutDashboard,
-        url: "/admin",
+        title: "Article",
+        icon: Newspaper,
+        url: "/admin/article",
     },
     {
         title: "Catégories",
@@ -25,18 +26,17 @@ const menuItems = [
         url: "/admin/category",
     },
     {
-        title: "Utilisateurs",
-        icon: User,
-        url: "/admin/users",
-    },
-    {
-        title: "Paramètres",
-        icon: Settings,
-        url: "/admin/settings",
+        title: "Comment",
+        icon: MessageSquareText,
+        url: "/admin/comment",
     },
 ]
 
 export function AdminSidebar() {
+    const pathname = usePathname();
+    if (!pathname) {
+        return null;
+    }
     return (
         <Sidebar>
             <SidebarHeader className="border-b border-border p-4">
@@ -52,7 +52,7 @@ export function AdminSidebar() {
                         <SidebarMenu>
                             {menuItems.map((item) => (
                                 <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton asChild>
+                                    <SidebarMenuButton asChild isActive={pathname === item.url}>
                                         <a href={item.url} className="flex items-center gap-2">
                                             <item.icon className="h-4 w-4" />
                                             <span>{item.title}</span>
