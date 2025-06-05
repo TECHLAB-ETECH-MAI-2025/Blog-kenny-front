@@ -1,6 +1,6 @@
 "use client"
 
-import { Home, ListOrdered, MessageSquareText, Newspaper, User } from "lucide-react"
+import { Home, ListOrdered, MessageSquareText, Newspaper } from "lucide-react"
 import {
     Sidebar,
     SidebarContent,
