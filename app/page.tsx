@@ -6,7 +6,7 @@ export default function Home() {
 
         <div className="flex flex-col justify-center items-center h-screen gap-4">
             <ThemeToggle />
-            <Button>Coucou blog</Button>
+            <Button>Explore Our Blog</Button>
         </div>
 
     );
