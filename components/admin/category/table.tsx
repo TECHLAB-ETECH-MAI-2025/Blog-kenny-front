@@ -6,6 +6,7 @@ import { PaginationMeta } from "@/src/types"
 import { getCategories, deleteCategory } from "@/src/services/CategoryService"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
+import { Badge } from "@/components/ui/badge"
 import {
     Table,
     TableBody,
@@ -16,7 +17,7 @@ import {
 } from "@/components/ui/table"
 import { Pagination } from "@/components/admin/pagination"
 import Link from "next/link"
-import { Pencil, Trash } from "lucide-react"
+import { Calendar, FileText, Hash, Info, Pencil, Trash } from "lucide-react"
 
 export const CategoryTable = () => {
     const [categories, setCategories] = useState<Category[]>([])
@@ -75,10 +76,36 @@ export const CategoryTable = () => {
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead>ID</TableHead>
-                            <TableHead>Nom</TableHead>
-                            <TableHead>Description</TableHead>
-                            <TableHead>Date de création</TableHead>
+                            <TableHead>
+                                <div className="flex items-center gap-2">
+                                    <Hash className="h-4 w-4" />
+                                    <span>ID</span>
+                                </div>
+                            </TableHead>
+                            <TableHead>
+                                <div className="flex items-center gap-2">
+                                    <FileText className="h-4 w-4" />
+                                    <span>Nom</span>
+                                </div>
+                            </TableHead>
+                            <TableHead>
+                                <div className="flex items-center gap-2">
+                                    <Info className="h-4 w-4" />
+                                    <span>Description</span>
+                                </div>
+                            </TableHead>
+                            <TableHead>
+                                <div className="flex items-center gap-2">
+                                    <Calendar className="h-4 w-4" />
+                                    <span>Date de création</span>
+                                </div>
+                            </TableHead>
+                            <TableHead>
+                                <div className="flex items-center gap-2">
+                                    <Calendar className="h-4 w-4" />
+                                    <span>Date de modification</span>
+                                </div>
+                            </TableHead>
                             <TableHead className="text-right">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -86,9 +113,14 @@ export const CategoryTable = () => {
                         {categories.map((category) => (
                             <TableRow key={category.id}>
                                 <TableCell className="font-medium">{category.id}</TableCell>
-                                <TableCell className="font-medium">{category.name}</TableCell>
+                                <TableCell>
+                                    <Badge variant="secondary">
+                                        {category.name}
+                                    </Badge>
+                                </TableCell>
                                 <TableCell>{category.description}</TableCell>
-                                <TableCell>{new Date(category.createdAt).toLocaleDateString()}</TableCell>
+                                <TableCell>{new Date(category.createdAt).toLocaleString('fr-FR', { dateStyle: 'medium', timeStyle: 'short' })}</TableCell>
+                                <TableCell>{new Date(category.updatedAt).toLocaleString('fr-FR', { dateStyle: 'medium', timeStyle: 'short' })}</TableCell>
                                 <TableCell className="text-right space-x-2">
                                     <Link href={`/admin/category/edit/${category.id}`}>
                                         <Button variant="outline" size="icon">
