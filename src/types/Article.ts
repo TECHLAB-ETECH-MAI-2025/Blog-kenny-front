@@ -1,6 +1,7 @@
 import { Category } from "./Category";
 import { BlogComment } from "./Comment";
 import { User } from "./User";
+import { z } from "zod";
 
 type Like = {
     id: number,
@@ -18,6 +19,14 @@ export type Article = {
     comments: BlogComment[],
     likes: Like[],
 };
+
+export const ArticleSchema = z.object({
+    title: z.string().min(1, "Le titre est requis"),
+    content: z.string().min(1, "Le contenu est requis"),
+    categories: z.array(z.number().int().positive("Les IDs de catégories doivent être des nombres positifs")),
+    createdAt: z.string().optional(),
+    updatedAt: z.string().optional()
+}).strict();
 
 /*
     api response structure:
