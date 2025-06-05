@@ -1,9 +1,7 @@
 import { CategoryTable } from "@/components/admin/category/table"
 import { Button } from "@/components/ui/button"
-import { TableSkeleton } from "@/components/ui/table-skeleton"
 import { Plus } from "lucide-react"
 import Link from "next/link"
-import { Suspense } from "react"
 
 export default function CategoryPage() {
 

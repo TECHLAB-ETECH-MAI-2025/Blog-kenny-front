@@ -14,7 +14,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { Pagination } from "@/components/ui/pagination"
+import { Pagination } from "@/components/admin/pagination"
 import Link from "next/link"
 import { Pencil, Trash } from "lucide-react"
 
@@ -75,6 +75,7 @@ export const CategoryTable = () => {
                 <Table>
                     <TableHeader>
                         <TableRow>
+                            <TableHead>ID</TableHead>
                             <TableHead>Nom</TableHead>
                             <TableHead>Description</TableHead>
                             <TableHead>Date de création</TableHead>
@@ -84,6 +85,7 @@ export const CategoryTable = () => {
                     <TableBody>
                         {categories.map((category) => (
                             <TableRow key={category.id}>
+                                <TableCell className="font-medium">{category.id}</TableCell>
                                 <TableCell className="font-medium">{category.name}</TableCell>
                                 <TableCell>{category.description}</TableCell>
                                 <TableCell>{new Date(category.createdAt).toLocaleDateString()}</TableCell>
@@ -103,14 +105,14 @@ export const CategoryTable = () => {
                                 </TableCell>
                             </TableRow>
                         ))}
+                        {categories.length === 0 && (
+                            <TableRow>
+                                <TableCell colSpan={4} className="text-center">
+                                    Aucune catégorie trouvée
+                                </TableCell>
+                            </TableRow>
+                        )}
                     </TableBody>
-                    {categories.length === 0 && (
-                        <TableRow>
-                            <TableCell colSpan={4} className="text-center">
-                                Aucune catégorie trouvée
-                            </TableCell>
-                        </TableRow>
-                    )}
                 </Table>
             </div>
 
