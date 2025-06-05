@@ -27,8 +27,6 @@ export const CategoryTable = () => {
         pages: 1
     })
 
-    console.log('meta', meta)
-
     const loadCategories = async (page: number = 1) => {
         try {
             const response = await getCategories(page);
