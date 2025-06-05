@@ -6,6 +6,7 @@ import { PaginationMeta } from "@/src/types"
 import { getComments, deleteComment } from "@/src/services/CommentService"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
+import { Badge } from "@/components/ui/badge"
 import {
     Table,
     TableBody,
@@ -16,7 +17,7 @@ import {
 } from "@/components/ui/table"
 import { Pagination } from "@/components/admin/pagination"
 import Link from "next/link"
-import { Pencil, Trash } from "lucide-react"
+import { BookText, Calendar, Hash, MessageCircle, Pencil, Trash, User } from "lucide-react"
 
 export const CommentTable = () => {
     const [comments, setComments] = useState<BlogComment[]>([])
@@ -75,11 +76,42 @@ export const CommentTable = () => {
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead>Id</TableHead>
-                            <TableHead>Contenu</TableHead>
-                            <TableHead>Article titre</TableHead>
-                            <TableHead>Auteur</TableHead>
-                            <TableHead>Date de création</TableHead>
+                            <TableHead>
+                                <div className="flex items-center gap-2">
+                                    <Hash className="h-4 w-4" />
+                                    <span>Id</span>
+                                </div>
+                            </TableHead>
+                            <TableHead>
+                                <div className="flex items-center gap-2">
+                                    <MessageCircle className="h-4 w-4" />
+                                    <span>Contenu</span>
+                                </div>
+                            </TableHead>
+                            <TableHead>
+                                <div className="flex items-center gap-2">
+                                    <BookText className="h-4 w-4" />
+                                    <span>Article titre</span>
+                                </div>
+                            </TableHead>
+                            <TableHead>
+                                <div className="flex items-center gap-2">
+                                    <User className="h-4 w-4" />
+                                    <span>Auteur</span>
+                                </div>
+                            </TableHead>
+                            <TableHead>
+                                <div className="flex items-center gap-2">
+                                    <Calendar className="h-4 w-4" />
+                                    <span>Date de création</span>
+                                </div>
+                            </TableHead>
+                            <TableHead>
+                                <div className="flex items-center gap-2">
+                                    <Calendar className="h-4 w-4" />
+                                    <span>Date de modification</span>
+                                </div>
+                            </TableHead>
                             <TableHead className="text-right">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -87,10 +119,21 @@ export const CommentTable = () => {
                         {comments.map((comment) => (
                             <TableRow key={comment.id}>
                                 <TableCell className="font-medium">{comment.id}</TableCell>
-                                <TableCell className="font-medium">{comment.content}</TableCell>
-                                <TableCell>{comment.article.title}</TableCell>
+                                <TableCell>
+                                    <Badge variant="outline">
+                                        {comment.content.length > 50
+                                            ? `${comment.content.substring(0, 50)}...`
+                                            : comment.content}
+                                    </Badge>
+                                </TableCell>
+                                <TableCell>
+                                    <Badge variant="secondary">
+                                        {comment.article.title}
+                                    </Badge>
+                                </TableCell>
                                 <TableCell>{`${comment.author.firstname} ${comment.author.lastname}`}</TableCell>
-                                <TableCell>{new Date(comment.createdAt).toLocaleDateString()}</TableCell>
+                                <TableCell>{new Date(comment.createdAt).toLocaleString('fr-FR', { dateStyle: 'medium', timeStyle: 'short' })}</TableCell>
+                                <TableCell>{new Date(comment.updatedAt).toLocaleString('fr-FR', { dateStyle: 'medium', timeStyle: 'short' })}</TableCell>
                                 <TableCell className="text-right space-x-2">
                                     <Link href={`/admin/comment/edit/${comment.id}`}>
                                         <Button variant="outline" size="icon">

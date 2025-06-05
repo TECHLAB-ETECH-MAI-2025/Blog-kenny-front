@@ -1,9 +1,9 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Category } from "@/src/types/Category"
+import { Article } from "@/src/types/Article"
 import { PaginationMeta } from "@/src/types"
-import { getCategories, deleteCategory } from "@/src/services/CategoryService"
+import { getArticles, deleteArticle } from "@/src/services/ArticleService"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 import { Badge } from "@/components/ui/badge"
@@ -17,10 +17,10 @@ import {
 } from "@/components/ui/table"
 import { Pagination } from "@/components/admin/pagination"
 import Link from "next/link"
-import { Calendar, FileText, Hash, Info, Pencil, Trash } from "lucide-react"
+import { BookText, Calendar, Hash, Pencil, Tags, Trash, User } from "lucide-react"
 
-export const CategoryTable = () => {
-    const [categories, setCategories] = useState<Category[]>([])
+export const ArticleTable = () => {
+    const [articles, setArticles] = useState<Article[]>([])
     const [meta, setMeta] = useState<PaginationMeta>({
         total: 0,
         page: 1,
@@ -28,14 +28,14 @@ export const CategoryTable = () => {
         pages: 1
     })
 
-    const loadCategories = async (page: number = 1) => {
+    const loadArticles = async (page: number = 1) => {
         try {
-            const response = await getCategories(page);
-            setCategories(response.categories)
+            const response = await getArticles(page);
+            setArticles(response.articles)
             setMeta(response.meta)
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : 'Veuillez vérifier votre connexion et réessayer'
-            toast.error('Échec du chargement des catégories', {
+            toast.error('Échec du chargement des articles', {
                 description: errorMessage,
                 duration: 4000,
             })
@@ -43,23 +43,23 @@ export const CategoryTable = () => {
     }
 
     useEffect(() => {
-        loadCategories()
+        loadArticles()
     }, [])
 
     const handlePageChange = (page: number) => {
-        loadCategories(page)
+        loadArticles(page)
     }
 
     const handleDelete = async (id: number) => {
         try {
             toast.loading('Suppression en cours...', { id: `delete-${id}` })
-            await deleteCategory(id)
-            toast.success('Catégorie supprimée', {
+            await deleteArticle(id)
+            toast.success('Article supprimé', {
                 id: `delete-${id}`,
-                description: 'La catégorie a été supprimée avec succès',
+                description: "L'article a été supprimé avec succès",
                 duration: 3000,
             })
-            loadCategories()
+            loadArticles()
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : 'Une erreur est survenue lors de la suppression'
             toast.error('Échec de la suppression', {
@@ -79,19 +79,25 @@ export const CategoryTable = () => {
                             <TableHead>
                                 <div className="flex items-center gap-2">
                                     <Hash className="h-4 w-4" />
-                                    <span>ID</span>
+                                    <span>Id</span>
                                 </div>
                             </TableHead>
                             <TableHead>
                                 <div className="flex items-center gap-2">
-                                    <FileText className="h-4 w-4" />
-                                    <span>Nom</span>
+                                    <BookText className="h-4 w-4" />
+                                    <span>Titre</span>
                                 </div>
                             </TableHead>
                             <TableHead>
                                 <div className="flex items-center gap-2">
-                                    <Info className="h-4 w-4" />
-                                    <span>Description</span>
+                                    <Tags className="h-4 w-4" />
+                                    <span>Catégorie</span>
+                                </div>
+                            </TableHead>
+                            <TableHead>
+                                <div className="flex items-center gap-2">
+                                    <User className="h-4 w-4" />
+                                    <span>Auteur</span>
                                 </div>
                             </TableHead>
                             <TableHead>
@@ -100,29 +106,31 @@ export const CategoryTable = () => {
                                     <span>Date de création</span>
                                 </div>
                             </TableHead>
-                            <TableHead>
-                                <div className="flex items-center gap-2">
-                                    <Calendar className="h-4 w-4" />
-                                    <span>Date de modification</span>
-                                </div>
-                            </TableHead>
                             <TableHead className="text-right">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {categories.map((category) => (
-                            <TableRow key={category.id}>
-                                <TableCell className="font-medium">{category.id}</TableCell>
+                        {articles.map((article) => (
+                            <TableRow key={article.id}>
+                                <TableCell className="font-medium">{article.id}</TableCell>
+                                <TableCell className="font-medium">{article.title}</TableCell>
                                 <TableCell>
-                                    <Badge variant="secondary">
-                                        {category.name}
-                                    </Badge>
+                                    {article.categories.length > 0 ? (
+                                        <div className="flex flex-wrap gap-1">
+                                            {article.categories.map(cat => (
+                                                <Badge key={cat.id} variant="secondary">
+                                                    {cat.name}
+                                                </Badge>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <Badge variant="outline">Sans catégorie</Badge>
+                                    )}
                                 </TableCell>
-                                <TableCell>{category.description}</TableCell>
-                                <TableCell>{new Date(category.createdAt).toLocaleString('fr-FR', { dateStyle: 'medium', timeStyle: 'short' })}</TableCell>
-                                <TableCell>{new Date(category.updatedAt).toLocaleString('fr-FR', { dateStyle: 'medium', timeStyle: 'short' })}</TableCell>
+                                <TableCell>{`${article.author.firstname} ${article.author.lastname}`}</TableCell>
+                                <TableCell>{new Date(article.createdAt).toLocaleString('fr-FR', { dateStyle: 'medium', timeStyle: 'short' })}</TableCell>
                                 <TableCell className="text-right space-x-2">
-                                    <Link href={`/admin/category/edit/${category.id}`}>
+                                    <Link href={`/admin/article/edit/${article.id}`}>
                                         <Button variant="outline" size="icon">
                                             <Pencil className="h-4 w-4" />
                                         </Button>
@@ -130,17 +138,17 @@ export const CategoryTable = () => {
                                     <Button
                                         variant="destructive"
                                         size="icon"
-                                        onClick={() => handleDelete(category.id)}
+                                        onClick={() => handleDelete(article.id)}
                                     >
                                         <Trash className="h-4 w-4" />
                                     </Button>
                                 </TableCell>
                             </TableRow>
                         ))}
-                        {categories.length === 0 && (
+                        {articles.length === 0 && (
                             <TableRow>
-                                <TableCell colSpan={4} className="text-center">
-                                    Aucune catégorie trouvée
+                                <TableCell colSpan={6} className="text-center">
+                                    Aucun article trouvé
                                 </TableCell>
                             </TableRow>
                         )}
