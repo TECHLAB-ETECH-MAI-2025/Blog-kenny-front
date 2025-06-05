@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/table"
 import { Pagination } from "@/components/admin/pagination"
 import Link from "next/link"
-import { BookText, Calendar, Hash, Pencil, Tags, Trash, User } from "lucide-react"
+import { BookText, Calendar, Eye, Hash, Pencil, Tags, Trash, User } from "lucide-react"
 
 export const ArticleTable = () => {
     const [articles, setArticles] = useState<Article[]>([])
@@ -130,6 +130,11 @@ export const ArticleTable = () => {
                                 <TableCell>{`${article.author.firstname} ${article.author.lastname}`}</TableCell>
                                 <TableCell>{new Date(article.createdAt).toLocaleString('fr-FR', { dateStyle: 'medium', timeStyle: 'short' })}</TableCell>
                                 <TableCell className="text-right space-x-2">
+                                    <Link href={`/admin/article/view/${article.id}`}>
+                                        <Button variant="outline" size="icon">
+                                            <Eye className="h-4 w-4" />
+                                        </Button>
+                                    </Link>
                                     <Link href={`/admin/article/edit/${article.id}`}>
                                         <Button variant="outline" size="icon">
                                             <Pencil className="h-4 w-4" />

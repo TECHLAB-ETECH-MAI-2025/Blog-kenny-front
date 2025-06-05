@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/table"
 import { Pagination } from "@/components/admin/pagination"
 import Link from "next/link"
-import { BookText, Calendar, Hash, MessageCircle, Pencil, Trash, User } from "lucide-react"
+import { BookText, Calendar, Eye, Hash, MessageCircle, Pencil, Trash, User } from "lucide-react"
 
 export const CommentTable = () => {
     const [comments, setComments] = useState<BlogComment[]>([])
@@ -135,6 +135,11 @@ export const CommentTable = () => {
                                 <TableCell>{new Date(comment.createdAt).toLocaleString('fr-FR', { dateStyle: 'medium', timeStyle: 'short' })}</TableCell>
                                 <TableCell>{new Date(comment.updatedAt).toLocaleString('fr-FR', { dateStyle: 'medium', timeStyle: 'short' })}</TableCell>
                                 <TableCell className="text-right space-x-2">
+                                    <Link href={`/admin/comment/view/${comment.id}`}>
+                                        <Button variant="outline" size="icon">
+                                            <Eye className="h-4 w-4" />
+                                        </Button>
+                                    </Link>
                                     <Link href={`/admin/comment/edit/${comment.id}`}>
                                         <Button variant="outline" size="icon">
                                             <Pencil className="h-4 w-4" />
