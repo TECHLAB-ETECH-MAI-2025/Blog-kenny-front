@@ -34,6 +34,10 @@ export const getArticleById = async (id: number): Promise<Article> => {
 
 export const createArticle = async (data: { title: string; content: string; categories: number[] }): Promise<{ article: Article; message: string }> => {
     const response = await api.post<ApiResponse<Article>>(`/article/new`, data);
+    if (response.status !== 200) {
+        throw new Error(`Échec de la création de l'article: ${response.statusText}\n`
+            + `API error: ${response.data.message}`);
+    }
     return {
         article: response.data.data,
         message: response.data.message
