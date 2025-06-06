@@ -22,7 +22,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
         });
         if (response.status !== 200) {
             const err = response.data.errors;
-            throw new Error(err + 'Erreur de connexion');
+            throw new Error(`${JSON.stringify(err)} : Erreur de connexion`);
         }
 
         const data = response.data.data;
