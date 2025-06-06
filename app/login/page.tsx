@@ -44,7 +44,7 @@ export default function LoginPage() {
             }
         } catch (error) {
             //console.error('Login error:', error);
-            toast.error(`Échec de la connexion. veuillez verifier vos identifiants.`);
+            toast.error('Échec de la connexion : veuillez vérifier vos identifiants.');
         } finally {
             setIsLoading(false);
         }
