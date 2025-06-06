@@ -34,7 +34,7 @@ export default function LoginPage() {
         try {
             setIsLoading(true);
             const user = await login(data.email, data.password);
-            toast.success('Connexion réussie' + user);
+            toast.success('Connexion réussie: ' + (user?.email || 'Utilisateur inconnu'));
             if (user?.roles.includes('ROLE_ADMIN')) {
                 toast.success('Bienvenue Admin');
                 router.push('/admin');
