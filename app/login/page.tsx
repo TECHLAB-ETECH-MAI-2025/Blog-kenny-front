@@ -11,8 +11,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Form } from '@/components/ui/form';
 import FormField from '@/components/form/form-field';
-import { UserService } from '@/src/services/UserService';
 import { loginSchema } from '@/src/types/User';
+import { useAuthStore } from '@/store/authStore';
 
 
 type LoginForm = z.infer<typeof loginSchema>;
@@ -20,6 +20,7 @@ type LoginForm = z.infer<typeof loginSchema>;
 export default function LoginPage() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
+    const { login } = useAuthStore();
 
     const form = useForm<LoginForm>({
         resolver: zodResolver(loginSchema),
@@ -32,11 +33,18 @@ export default function LoginPage() {
     const onSubmit = async (data: LoginForm) => {
         try {
             setIsLoading(true);
-            await UserService.login(data);
-            toast.success('Connexion réussie');
-            router.push('/admin');
+            const user = await login(data.email, data.password);
+            toast.success('Connexion réussie' + user);
+            if (user?.roles.includes('ROLE_ADMIN')) {
+                toast.success('Bienvenue Admin');
+                router.push('/admin');
+            } else if (user?.roles.includes('ROLE_USER')) {
+                toast.success('Bienvenue');
+                router.push('/');
+            }
         } catch (error) {
-            toast.error('Échec de la connexion. Veuillez vérifier vos identifiants.');
+            //console.error('Login error:', error);
+            toast.error(`Échec de la connexion. veuillez verifier vos identifiants.`);
         } finally {
             setIsLoading(false);
         }
