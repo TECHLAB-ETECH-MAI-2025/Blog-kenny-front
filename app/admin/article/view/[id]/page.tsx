@@ -7,16 +7,49 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
-import { Calendar, ChevronLeft, Eye, MessageCircle, Tags, User } from "lucide-react"
+import { Calendar, ChevronLeft, Eye, MessageCircle, Tags, User, Heart } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
+import { useAuthStore } from "@/store/authStore"
+import { likeArticle } from "@/src/services/LikeService"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 export default function ArticleDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const [article, setArticle] = useState<Article | null>(null);
     const [loading, setLoading] = useState(true);
     const { id } = use(params);
-    const router = useRouter()
+    const router = useRouter();
+    const { user } = useAuthStore();
+    //const queryClient = useQueryClient();
+    //const [newComment, setNewComment] = useState("");
+
+    // Mutations pour les likes
+    const likeMutation = useMutation({
+        mutationFn: async () => {
+            const result = await likeArticle(Number.parseInt(id));
+            return result.article;
+        },
+        onSuccess: (updatedArticle: Article) => {
+            setArticle(updatedArticle); // Met à jour l'état local avec l'article retourné par l'API
+            toast.success("Article liké");
+        },
+        onError: (error) => {
+            const message = error instanceof Error ? error.message : "Une erreur est survenue";
+            toast.error("Erreur lors du like", {
+                description: message
+            });
+        }
+    });
+
+
+    const handleLikeClick = () => {
+        if (!user) {
+            router.push("/login");
+            return;
+        }
+        likeMutation.mutate();
+    };
 
     useEffect(() => {
         const loadArticle = async () => {
@@ -121,6 +154,17 @@ export default function ArticleDetailPage({ params }: { params: Promise<{ id: st
                             <Badge variant="secondary" className="rounded-full">
                                 {article.comments?.length || 0}
                             </Badge>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                            <Button
+                                variant={article.likes.some(like => like.authorId === user?.id) ? "secondary" : "outline"}
+                                size="sm"
+                                onClick={handleLikeClick}
+                            >
+                                <Heart className="mr-2 h-4 w-4" />
+                                {article.likes.some(like => like.authorId === user?.id) ? "Je n'aime plus" : "J'aime"}
+                            </Button>
                         </div>
                     </div>
                 </CardContent>
