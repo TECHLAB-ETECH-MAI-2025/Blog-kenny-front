@@ -37,10 +37,10 @@ export default function LoginPage() {
             toast.success('Connexion réussie: ' + (user?.email || 'Utilisateur inconnu'));
             if (user?.roles.includes('ROLE_ADMIN')) {
                 toast.success('Bienvenue Admin');
-                router.push('/admin');
+                router.push('/admin/article');
             } else if (user?.roles.includes('ROLE_USER')) {
                 toast.success('Bienvenue');
-                router.push('/');
+                router.push('/blog');
             }
         } catch (error) {
             //console.error('Login error:', error);
