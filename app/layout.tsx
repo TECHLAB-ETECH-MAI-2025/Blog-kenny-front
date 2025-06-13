@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import { QueryProvider } from "@/components/providers/query-provider";
 import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
@@ -13,29 +14,30 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+
     return (
         <html lang="en" suppressHydrationWarning>
-            <body
-
-            >
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="system"
-                    enableSystem
-                    disableTransitionOnChange
-                >
-                    {children}
-                    <Toaster
-                        position="top-right"
-                        expand={true}
-                        richColors
-                        closeButton
-                        toastOptions={{
-                            style: { fontSize: '14px' },
-                            className: 'dark:bg-zinc-900 dark:text-white',
-                        }}
-                    />
-                </ThemeProvider>
+            <body>
+                <QueryProvider>
+                    <ThemeProvider
+                        attribute="class"
+                        defaultTheme="system"
+                        enableSystem
+                        disableTransitionOnChange
+                    >
+                        {children}
+                        <Toaster
+                            position="top-right"
+                            expand={true}
+                            richColors
+                            closeButton
+                            toastOptions={{
+                                style: { fontSize: '14px' },
+                                className: 'dark:bg-zinc-900 dark:text-white',
+                            }}
+                        />
+                    </ThemeProvider>
+                </QueryProvider>
             </body>
         </html>
     );

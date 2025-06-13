@@ -30,6 +30,11 @@ const menuItems = [
         icon: MessageSquareText,
         url: "/admin/comment",
     },
+    {
+        title: "Blog",
+        icon: MessageSquareText,
+        url: "/blog",
+    },
 ]
 
 export function AdminSidebar() {
