@@ -4,7 +4,7 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import { Button } from "@/components/ui/button"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { useAuthStore } from "@/store/authStore"
-import { LogOut, Menu, Settings, User, Shield } from "lucide-react"
+import { LogOut, Menu } from "lucide-react"
 import {
     DropdownMenu,
     DropdownMenuContent,
